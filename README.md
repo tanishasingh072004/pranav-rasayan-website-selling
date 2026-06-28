@@ -63,7 +63,6 @@ What to changeWhere to look in the filePhone numberSearch for the tel: links and
 Contact
 
 Pranav Rasayan Pvt. Ltd.
-📧 Info@pranavrasayan.in
 
 Phone number and office address are available on the live website.
 
