@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pranav Rasayan Pvt. Ltd. — Crop Protection &amp; Agrochemical Solutions</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@300;400;500;600;700&display=swap');
+
+  :root{
+    --paper:#FAF6EC;
+    --paper-soft:#F3EEDF;
+    --ink:#1B3A2B;
+    --leaf:#4F7942;
+    --leaf-deep:#355C2C;
+    --soil:#C77B3D;
+    --gold:#E8B33D;
+    --white:#FFFFFF;
+    --ink-soft: rgba(27,58,43,0.65);
+    --ink-faint: rgba(27,58,43,0.4);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Work Sans',sans-serif;
+    overflow-x:hidden;
+    cursor:none;
+  }
+  ::selection{background:var(--gold);color:var(--ink);}
+
+  h1,h2,h3,.display{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    line-height:1.05;
+  }
+
+  a{color:inherit;text-decoration:none;}
+  img{display:block;max-width:100%;}
+
+  /* ===== custom cursor ===== */
+  #cursor-dot{
+    position:fixed;top:0;left:0;width:9px;height:9px;border-radius:50%;
+    background:var(--leaf-deep);pointer-events:none;z-index:9999;
+    transform:translate(-50%,-50%);transition:width .25s,height .25s,background .25s;
+  }
+  #cursor-ring{
+    position:fixed;top:0;left:0;width:38px;height:38px;border-radius:50%;
+    border:1.5px solid var(--leaf-deep);pointer-events:none;z-index:9998;
+    transform:translate(-50%,-50%);transition:width .3s,height .3s,opacity .3s,border-color .3s;
+    opacity:.5;
+  }
+  body.hovering #cursor-ring{width:62px;height:62px;border-color:var(--soil);opacity:.8;}
+  body.hovering #cursor-dot{background:var(--soil);}
+  @media (max-width:860px){
+    body{cursor:auto;}
+    #cursor-dot,#cursor-ring{display:none;}
+  }
+
+  /* ===== utility ===== */
+  .wrap{max-width:1280px;margin:0 auto;padding:0 32px;}
+  .eyebrow{
+    font-family:'Work Sans',sans-serif;font-weight:600;font-size:12.5px;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--soil);
+  }
+  .reveal{opacity:0;transform:translateY(34px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);}
+  .reveal.in{opacity:1;transform:translateY(0);}
+  .stagger > *{transition-delay:calc(var(--i) * 90ms);}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:14px 28px;border-radius:100px;font-weight:600;font-size:14.5px;
+    letter-spacing:.02em;border:1.5px solid var(--ink);
+    background:transparent;color:var(--ink);transition:all .35s cubic-bezier(.16,1,.3,1);
+  }
+  .btn.solid{background:var(--leaf-deep);border-color:var(--leaf-deep);color:var(--paper);}
+  .btn:hover{background:var(--ink);color:var(--paper);border-color:var(--ink);transform:translateY(-2px);}
+  .btn.solid:hover{background:var(--soil);border-color:var(--soil);}
+
+  /* ===== nav ===== */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:500;
+    padding:18px 0;transition:background .4s, box-shadow .4s, backdrop-filter .4s, padding .4s;
+  }
+  header.scrolled{
+    background:rgba(250,246,236,0.78);backdrop-filter:blur(14px);
+    box-shadow:0 1px 0 rgba(27,58,43,0.08);padding:12px 0;
+  }
+  nav{display:flex;align-items:center;justify-content:space-between;}
+  .logo{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:600;font-size:20px;}
+  .logo-mark{width:30px;height:30px;flex-shrink:0;}
+  .navlinks{display:flex;gap:36px;font-size:14px;font-weight:500;}
+  .navlinks a{position:relative;padding-bottom:4px;color:var(--ink-soft);transition:color .3s;}
+  .navlinks a::after{
+    content:'';position:absolute;left:0;bottom:0;width:0;height:1.5px;background:var(--soil);transition:width .3s;
+  }
+  .navlinks a:hover{color:var(--ink);}
+  .navlinks a:hover::after{width:100%;}
+  .navcta{display:flex;align-items:center;gap:18px;}
+  .nav-phone{font-size:13.5px;font-weight:600;color:var(--ink-soft);display:none;}
+  @media (min-width:1000px){.nav-phone{display:inline;}}
+  .hamburger{display:none;width:24px;height:18px;position:relative;cursor:pointer;}
+  .hamburger span{position:absolute;left:0;right:0;height:2px;background:var(--ink);}
+  .hamburger span:nth-child(1){top:0;} .hamburger span:nth-child(2){top:8px;} .hamburger span:nth-child(3){top:16px;}
+  @media (max-width:860px){
+    .navlinks{display:none;}
+    .hamburger{display:block;}
+  }
+
+  /* ===== hero ===== */
+  .hero{
+    position:relative;min-height:100vh;display:flex;align-items:center;
+    padding-top:120px;padding-bottom:60px;overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute;inset:0;
+    background:
+      radial-gradient(ellipse 60% 50% at 85% 15%, rgba(232,179,61,0.18), transparent 60%),
+      radial-gradient(ellipse 70% 60% at 10% 90%, rgba(79,121,66,0.14), transparent 60%);
+    pointer-events:none;
+  }
+  .hero-grid{
+    display:grid;grid-template-columns:1.15fr 1fr;gap:48px;align-items:center;position:relative;z-index:2;
+  }
+  @media (max-width:980px){.hero-grid{grid-template-columns:1fr;}}
+
+  .hero h1{font-size:clamp(40px,5.6vw,72px);color:var(--ink);margin:18px 0 22px;}
+  .hero h1 .accent{color:var(--leaf-deep);font-style:italic;}
+  .hero-sub{font-size:17.5px;line-height:1.65;color:var(--ink-soft);max-width:480px;margin-bottom:34px;}
+  .hero-ctas{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:46px;}
+  .hero-trustline{display:flex;align-items:center;gap:14px;font-size:13.5px;color:var(--ink-faint);}
+  .hero-trustline .dots{display:flex;}
+  .hero-trustline .dots span{width:9px;height:9px;border-radius:50%;background:var(--leaf);border:2px solid var(--paper);margin-left:-5px;}
+  .hero-trustline .dots span:first-child{margin-left:0;}
+
+  /* split-text reveal */
+  .split-word{display:inline-block;overflow:hidden;vertical-align:bottom;}
+  .split-word span{display:inline-block;transform:translateY(110%);transition:transform .9s cubic-bezier(.16,1,.3,1);}
+  .hero.loaded .split-word span{transform:translateY(0);}
+
+  /* hero visual card */
+  .hero-visual{position:relative;}
+  .grow-card{
+    position:relative;border-radius:28px;overflow:hidden;
+    background:linear-gradient(155deg,#EFE9D8 0%, #E3DCC6 100%);
+    box-shadow:0 30px 70px -20px rgba(27,58,43,0.35), 0 0 0 1px rgba(27,58,43,0.06);
+    aspect-ratio:4/5;max-width:430px;margin:0 auto;
+    animation:floaty 6s ease-in-out infinite;
+  }
+  @keyframes floaty{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+  .grow-card svg{width:100%;height:100%;display:block;}
+  .grow-tag{
+    position:absolute;left:18px;bottom:18px;right:18px;
+    background:rgba(250,246,236,0.85);backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.5);
+    border-radius:16px;padding:13px 16px;display:flex;align-items:center;gap:11px;
+    box-shadow:0 8px 24px rgba(27,58,43,0.12);
+  }
+  .grow-tag .ico{width:32px;height:32px;border-radius:50%;background:var(--leaf-deep);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .grow-tag .ico svg{width:16px;height:16px;}
+  .grow-tag .txt b{display:block;font-size:13px;font-weight:700;}
+  .grow-tag .txt span{font-size:11.5px;color:var(--ink-soft);}
+  .floatpill{
+    position:absolute;top:24px;right:-18px;background:var(--white);
+    border-radius:14px;padding:10px 16px;box-shadow:0 14px 30px rgba(27,58,43,0.18);
+    display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;
+    animation:floaty 5s ease-in-out infinite reverse;
+  }
+  .floatpill::before{content:'';width:8px;height:8px;border-radius:50%;background:#5BAA53;}
+  @media (max-width:560px){.floatpill{right:0;}}
+
+  /* ===== marquee / trust strip ===== */
+  .strip{background:var(--ink);padding:46px 0;color:var(--paper);overflow:hidden;}
+  .strip-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center;}
+  @media (max-width:760px){.strip-grid{grid-template-columns:repeat(2,1fr);row-gap:34px;}}
+  .strip-num{font-family:'Fraunces',serif;font-size:clamp(30px,4vw,44px);font-weight:600;color:var(--gold);}
+  .strip-label{font-size:12.5px;text-transform:uppercase;letter-spacing:.12em;color:rgba(250,246,236,0.65);margin-top:6px;}
+
+  /* ===== section heading pattern ===== */
+  section{padding:120px 0;position:relative;}
+  .sec-head{max-width:640px;margin-bottom:64px;}
+  .sec-head .eyebrow{margin-bottom:14px;display:block;}
+  .sec-head h2{font-size:clamp(32px,4vw,48px);}
+  .sec-head p{margin-top:18px;font-size:16.5px;color:var(--ink-soft);line-height:1.65;}
+
+  /* ===== products ===== */
+  .products{background:var(--paper-soft);}
+  .prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;}
+  @media (max-width:980px){.prod-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:640px){.prod-grid{grid-template-columns:1fr;}}
+  .prod-card{
+    position:relative;border-radius:22px;overflow:hidden;background:var(--white);
+    box-shadow:0 1px 0 rgba(27,58,43,0.05);
+    transition:transform .5s cubic-bezier(.16,1,.3,1), box-shadow .5s;
+  }
+  .prod-card:hover{transform:translateY(-8px);box-shadow:0 30px 50px -20px rgba(27,58,43,0.28);}
+  .prod-img{aspect-ratio:4/3;overflow:hidden;position:relative;}
+  .prod-img img{width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.16,1,.3,1);}
+  .prod-card:hover .prod-img img{transform:scale(1.08);}
+  .prod-tagchip{
+    position:absolute;top:14px;left:14px;background:rgba(27,58,43,0.85);color:var(--paper);
+    backdrop-filter:blur(6px);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    padding:6px 12px;border-radius:100px;
+  }
+  .prod-body{padding:22px 22px 26px;}
+  .prod-body h3{font-size:20px;margin-bottom:8px;}
+  .prod-body p{font-size:14.5px;color:var(--ink-soft);line-height:1.55;margin-bottom:14px;}
+  .prod-link{font-size:13.5px;font-weight:600;display:inline-flex;align-items:center;gap:6px;color:var(--leaf-deep);}
+  .prod-link svg{width:13px;height:13px;transition:transform .3s;}
+  .prod-card:hover .prod-link svg{transform:translateX(4px);}
+
+  /* ===== about ===== */
+  .about-grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:64px;align-items:center;}
+  @media (max-width:980px){.about-grid{grid-template-columns:1fr;}}
+  .about-imgwrap{position:relative;}
+  .about-img{
+    border-radius:50% 50% 46% 54% / 54% 46% 54% 46%;
+    overflow:hidden;aspect-ratio:1/1;box-shadow:0 40px 70px -20px rgba(27,58,43,0.3);
+  }
+  .about-img img{width:100%;height:100%;object-fit:cover;}
+  .about-badge{
+    position:absolute;bottom:6%;left:-8%;background:var(--gold);color:var(--ink);
+    border-radius:50%;width:118px;height:118px;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;box-shadow:0 14px 30px rgba(232,179,61,0.5);
+    transform:rotate(-8deg);
+  }
+  .about-badge b{font-family:'Fraunces',serif;font-size:26px;line-height:1;}
+  .about-badge span{font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-top:2px;}
+  @media (max-width:560px){.about-badge{width:92px;height:92px;left:-4%;}.about-badge b{font-size:20px;}}
+
+  .about-text h2{font-size:clamp(30px,4vw,42px);margin-bottom:22px;}
+  .about-text p{font-size:16px;line-height:1.75;color:var(--ink-soft);margin-bottom:18px;}
+  .about-sign{margin-top:30px;font-family:'Fraunces',serif;font-style:italic;font-size:28px;color:var(--ink-faint);}
+  .about-sign small{display:block;font-family:'Work Sans',sans-serif;font-style:normal;font-size:12.5px;color:var(--ink-faint);margin-top:4px;letter-spacing:.04em;}
+
+  /* ===== why us ===== */
+  .why{background:var(--ink);color:var(--paper);}
+  .why .eyebrow{color:var(--gold);}
+  .why .sec-head p{color:rgba(250,246,236,0.7);}
+  .why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(250,246,236,0.12);border-radius:18px;overflow:hidden;}
+  @media (max-width:900px){.why-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:560px){.why-grid{grid-template-columns:1fr;}}
+  .why-card{background:#21422F;padding:38px 28px;transition:background .4s;}
+  .why-card:hover{background:#2B5239;}
+  .why-card .ico{width:42px;height:42px;margin-bottom:20px;}
+  .why-card h3{font-size:18px;margin-bottom:10px;font-weight:600;font-family:'Work Sans',sans-serif;}
+  .why-card p{font-size:14px;line-height:1.6;color:rgba(250,246,236,0.65);}
+
+  /* ===== process ===== */
+  .process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;}
+  @media (max-width:980px){.process-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:560px){.process-grid{grid-template-columns:1fr;}}
+  .process-card{position:relative;padding-top:8px;}
+  .process-num{
+    font-family:'Fraunces',serif;font-size:50px;color:transparent;
+    -webkit-text-stroke:1.5px var(--soil);font-weight:600;line-height:1;margin-bottom:14px;
+  }
+  .process-card h3{font-size:18.5px;margin-bottom:10px;}
+  .process-card p{font-size:14.5px;color:var(--ink-soft);line-height:1.6;}
+  .process-line{position:absolute;top:30px;left:100%;width:26px;height:1.5px;background:var(--soil);opacity:.4;}
+  @media (max-width:980px){.process-line{display:none;}}
+
+  /* ===== gallery ===== */
+  .gallery{background:var(--paper-soft);}
+  .gal-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,180px);gap:14px;}
+  @media (max-width:900px){.gal-grid{grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(4,160px);}}
+  .gal-item{border-radius:16px;overflow:hidden;position:relative;}
+  .gal-item img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.16,1,.3,1);}
+  .gal-item:hover img{transform:scale(1.1);}
+  .gal-item.tall{grid-row:span 2;}
+  .gal-item.wide{grid-column:span 2;}
+
+  /* ===== contact ===== */
+  .contact{position:relative;overflow:hidden;}
+  .contact::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 50% 20%, rgba(232,179,61,0.22), transparent 55%);
+    pointer-events:none;
+  }
+  .contact-card{
+    position:relative;z-index:2;max-width:780px;margin:0 auto;
+    background:rgba(255,255,255,0.55);backdrop-filter:blur(16px);
+    border:1px solid rgba(255,255,255,0.7);border-radius:28px;
+    padding:54px;box-shadow:0 40px 80px -30px rgba(27,58,43,0.25);
+  }
+  @media (max-width:600px){.contact-card{padding:32px 22px;}}
+  .contact-card h2{font-size:clamp(28px,4vw,38px);text-align:center;margin-bottom:10px;}
+  .contact-card .sub{text-align:center;color:var(--ink-soft);font-size:15px;margin-bottom:36px;}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;}
+  @media (max-width:560px){.form-row{grid-template-columns:1fr;}}
+  .field label{display:block;font-size:12.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:7px;}
+  .field input,.field select,.field textarea{
+    width:100%;padding:13px 16px;border-radius:12px;border:1.5px solid rgba(27,58,43,0.18);
+    background:rgba(255,255,255,0.7);font-family:'Work Sans',sans-serif;font-size:14.5px;color:var(--ink);
+    transition:border-color .3s,background .3s;
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--leaf-deep);background:var(--white);}
+  .field textarea{resize:vertical;min-height:90px;}
+  .form-submit{width:100%;justify-content:center;margin-top:8px;}
+  .form-note{text-align:center;font-size:12.5px;color:var(--ink-faint);margin-top:16px;}
+
+  /* ===== footer ===== */
+  footer{background:var(--ink);color:rgba(250,246,236,0.75);padding:64px 0 28px;}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;margin-bottom:54px;}
+  @media (max-width:860px){.foot-grid{grid-template-columns:1fr 1fr;}}
+  @media (max-width:560px){.foot-grid{grid-template-columns:1fr;}}
+  .foot-logo{font-family:'Fraunces',serif;font-size:22px;color:var(--paper);font-weight:600;margin-bottom:14px;}
+  .foot-grid p{font-size:14px;line-height:1.65;max-width:280px;}
+  .foot-col h4{font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);margin-bottom:16px;font-weight:600;}
+  .foot-col a,.foot-col span{display:block;font-size:14px;margin-bottom:11px;color:rgba(250,246,236,0.7);transition:color .3s;line-height:1.5;}
+  .foot-col a:hover{color:var(--paper);}
+  .foot-bottom{border-top:1px solid rgba(250,246,236,0.12);padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12.5px;color:rgba(250,246,236,0.45);}
+
+  /* fade-in stagger helper class applied via JS */
+  [data-reveal]{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1);}
+  [data-reveal].in{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<header id="siteHeader">
+  <nav class="wrap">
+    <a href="#top" class="logo">
+      <svg class="logo-mark" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="19" stroke="#1B3A2B" stroke-width="1.5"/>
+        <path d="M20 30 V16" stroke="#355C2C" stroke-width="2" stroke-linecap="round"/>
+        <path d="M20 18 C20 13 15 12 12 13 C12 17 15 19 20 18Z" fill="#4F7942"/>
+        <path d="M20 21 C20 16 25 15 28 16 C28 20 25 22 20 21Z" fill="#355C2C"/>
+      </svg>
+      Pranav Rasayan
+    </a>
+    <div class="navlinks">
+      <a href="#products">Products</a>
+      <a href="#about">About</a>
+      <a href="#process">How We Work</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="navcta">
+      <a href="tel:+917017197172" class="nav-phone">+91 70171 97172</a>
+      <a href="#contact" class="btn solid">Enquire Now</a>
+      <div class="hamburger"><span></span><span></span><span></span></div>
+    </div>
+  </nav>
+</header>
+
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div class="hero-text">
+      <span class="eyebrow">Pranav Rasayan · Est. Crop Science Firm</span>
+      <h1>
+        <span class="split-word"><span>Healthier</span></span> <span class="split-word"><span>crops,</span></span><br>
+        <span class="split-word"><span class="accent">season</span></span> <span class="split-word"><span class="accent">after</span></span> <span class="split-word"><span class="accent">season.</span></span>
+      </h1>
+      <p class="hero-sub">We formulate trusted pesticides, fungicides and crop nutrition solutions that protect yield from sowing to harvest — built for the Indian farmer's field, weather and budget.</p>
+      <div class="hero-ctas">
+        <a href="#products" class="btn solid">Explore Products</a>
+        <a href="#contact" class="btn">Talk to Our Team</a>
+      </div>
+      <div class="hero-trustline">
+        <div class="dots"><span></span><span></span><span></span><span></span></div>
+        <span>Trusted by dealers &amp; farmers across multiple districts</span>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="floatpill">Live Field-Tested</div>
+      <div class="grow-card">
+        <svg viewBox="0 0 430 540" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#F7E9C4"/>
+              <stop offset="100%" stop-color="#EFE4C6"/>
+            </linearGradient>
+            <linearGradient id="soilGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#8C5A33"/>
+              <stop offset="100%" stop-color="#5B3A20"/>
+            </linearGradient>
+          </defs>
+          <rect width="430" height="540" fill="url(#skyGrad)"/>
+          <!-- sun -->
+          <g>
+            <circle cx="345" cy="95" r="42" fill="#E8B33D" opacity="0.9">
+              <animate attributeName="r" values="42;46;42" dur="4s" repeatCount="indefinite"/>
+            </circle>
+            <g stroke="#E8B33D" stroke-width="3" stroke-linecap="round" opacity="0.55">
+              <line x1="345" y1="28" x2="345" y2="14"><animate attributeName="opacity" values="0.55;0.15;0.55" dur="3s" repeatCount="indefinite"/></line>
+              <line x1="400" y1="50" x2="411" y2="40"><animate attributeName="opacity" values="0.15;0.55;0.15" dur="3s" repeatCount="indefinite"/></line>
+              <line x1="290" y1="50" x2="279" y2="40"><animate attributeName="opacity" values="0.55;0.15;0.55" dur="3.4s" repeatCount="indefinite"/></line>
+            </g>
+          </g>
+          <!-- distant clouds -->
+          <ellipse cx="90" cy="70" rx="46" ry="16" fill="#FFFFFF" opacity="0.55">
+            <animate attributeName="cx" values="70;110;70" dur="14s" repeatCount="indefinite"/>
+          </ellipse>
+          <ellipse cx="200" cy="50" rx="34" ry="12" fill="#FFFFFF" opacity="0.4">
+            <animate attributeName="cx" values="220;180;220" dur="18s" repeatCount="indefinite"/>
+          </ellipse>
+          <!-- ground -->
+          <rect y="400" width="430" height="140" fill="url(#soilGrad)"/>
+          <path d="M0 400 Q 215 385 430 400 V540 H0 Z" fill="url(#soilGrad)"/>
+          <!-- soil furrow lines -->
+          <g stroke="#3F2814" stroke-width="2" opacity="0.4">
+            <path d="M30 420 Q215 408 400 420"/>
+            <path d="M20 450 Q215 438 410 450"/>
+            <path d="M15 480 Q215 470 415 480"/>
+          </g>
+
+          <!-- PLANT GROWTH ANIMATION : seed -> sprout -> stem -> leaves -> flower, looping -->
+          <g transform="translate(215,400)">
+            <!-- seed (visible at start, fades) -->
+            <ellipse cx="0" cy="-4" rx="7" ry="10" fill="#6B4226">
+              <animate attributeName="opacity" values="1;1;0;0;0;0;1" dur="9s" repeatCount="indefinite"/>
+            </ellipse>
+
+            <!-- stem grows upward -->
+            <path id="stemPath" d="M0,0 C -4,-40 4,-90 0,-150" stroke="#3F7D34" stroke-width="6" fill="none" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100">
+              <animate attributeName="stroke-dashoffset" values="100;100;100;0;0;0;100" keyTimes="0;0.1;0.18;0.45;0.85;0.95;1" dur="9s" repeatCount="indefinite"/>
+            </path>
+
+            <!-- leaf pair 1 -->
+            <g opacity="0">
+              <animate attributeName="opacity" values="0;0;0;1;1;1;0" keyTimes="0;0.18;0.25;0.4;0.85;0.92;1" dur="9s" repeatCount="indefinite"/>
+              <path d="M0,-60 C -36,-66 -50,-92 -34,-112 C -10,-100 -2,-78 0,-60Z" fill="#4F8B3F"/>
+              <path d="M0,-60 C 36,-66 50,-92 34,-112 C 10,-100 2,-78 0,-60Z" fill="#5C9A4A"/>
+            </g>
+            <!-- leaf pair 2 -->
+            <g opacity="0">
+              <animate attributeName="opacity" values="0;0;0;0;1;1;0" keyTimes="0;0.22;0.3;0.42;0.85;0.92;1" dur="9s" repeatCount="indefinite"/>
+              <path d="M0,-100 C -30,-104 -42,-126 -28,-142 C -8,-132 -2,-114 0,-100Z" fill="#5C9A4A"/>
+              <path d="M0,-100 C 30,-104 42,-126 28,-142 C 8,-132 2,-114 0,-100Z" fill="#6BA956"/>
+            </g>
+
+            <!-- flower/fruit at top -->
+            <g opacity="0" transform="translate(0,-150)">
+              <animate attributeName="opacity" values="0;0;0;0;0;1;0" keyTimes="0;0.3;0.4;0.5;0.6;0.8;1" dur="9s" repeatCount="indefinite"/>
+              <circle r="9" fill="#E8B33D"/>
+              <g fill="#F4D27A">
+                <ellipse cx="0" cy="-13" rx="5" ry="9"/>
+                <ellipse cx="0" cy="13" rx="5" ry="9"/>
+                <ellipse cx="13" cy="0" rx="9" ry="5"/>
+                <ellipse cx="-13" cy="0" rx="9" ry="5"/>
+              </g>
+              <circle r="5" fill="#C77B3D"/>
+            </g>
+          </g>
+
+          <!-- small foreground sprouts, offset timing for life -->
+          <g transform="translate(120,420) scale(0.55)">
+            <path d="M0,0 C -3,-30 3,-60 0,-100" stroke="#3F7D34" stroke-width="6" fill="none" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100">
+              <animate attributeName="stroke-dashoffset" values="100;100;0;0;100" keyTimes="0;0.05;0.3;0.9;1" dur="9s" repeatCount="indefinite"/>
+            </path>
+            <g opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.15;0.35;0.85;1" dur="9s" repeatCount="indefinite"/>
+              <path d="M0,-40 C -24,-44 -34,-62 -22,-76 C -6,-68 -1,-52 0,-40Z" fill="#5C9A4A"/>
+              <path d="M0,-40 C 24,-44 34,-62 22,-76 C 6,-68 1,-52 0,-40Z" fill="#6BA956"/>
+            </g>
+          </g>
+          <g transform="translate(305,425) scale(0.45)">
+            <path d="M0,0 C 3,-30 -3,-60 0,-100" stroke="#3F7D34" stroke-width="6" fill="none" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100">
+              <animate attributeName="stroke-dashoffset" values="100;100;0;0;100" keyTimes="0;0.1;0.35;0.88;1" dur="9s" repeatCount="indefinite"/>
+            </path>
+            <g opacity="0">
+              <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.2;0.4;0.85;1" dur="9s" repeatCount="indefinite"/>
+              <path d="M0,-40 C -24,-44 -34,-62 -22,-76 C -6,-68 -1,-52 0,-40Z" fill="#5C9A4A"/>
+              <path d="M0,-40 C 24,-44 34,-62 22,-76 C 6,-68 1,-52 0,-40Z" fill="#6BA956"/>
+            </g>
+          </g>
+        </svg>
+        <div class="grow-tag">
+          <div class="ico">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 21c0-6-4-9-4-13a4 4 0 1 1 8 0c0 4-4 7-4 13Z" stroke="#FAF6EC" stroke-width="1.6"/></svg>
+          </div>
+          <div class="txt">
+            <b>Seed to Harvest Protection</b>
+            <span>Watch the crop lifecycle, simulated live</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="strip">
+  <div class="wrap strip-grid">
+    <div><div class="strip-num">25+</div><div class="strip-label">Years in Agrochemicals</div></div>
+    <div><div class="strip-num">40k+</div><div class="strip-label">Farmers Served</div></div>
+    <div><div class="strip-num">120+</div><div class="strip-label">Active Dealer Network</div></div>
+    <div><div class="strip-num">30+</div><div class="strip-label">Registered Formulations</div></div>
+  </div>
+</section>
+
+<section class="products" id="products">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow">Our Range</span>
+      <h2>Crop protection, built by category</h2>
+      <p>From early pest attack to fungal outbreaks and weed pressure — every formulation is matched to the problem farmers actually face in the field.</p>
+    </div>
+    <div class="prod-grid">
+
+      <div class="prod-card" data-reveal>
+        <div class="prod-img">
+          <span class="prod-tagchip">Insecticide</span>
+          <img src="https://images.unsplash.com/photo-1592982537447-7440770cbfc9?q=80&w=900&auto=format&fit=crop" alt="Farmer spraying insecticide on green crop field">
+        </div>
+        <div class="prod-body">
+          <h3>Insecticides</h3>
+          <p>Broad and targeted-spectrum control against sucking and chewing pests across cotton, paddy, vegetables and pulses.</p>
+          <a href="#contact" class="prod-link">View formulations <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2"/></svg></a>
+        </div>
+      </div>
+
+      <div class="prod-card" data-reveal>
+        <div class="prod-img">
+          <span class="prod-tagchip">Fungicide</span>
+          <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=900&auto=format&fit=crop" alt="Healthy green crop field after fungicide treatment">
+        </div>
+        <div class="prod-body">
+          <h3>Fungicides</h3>
+          <p>Preventive and curative protection against blight, rust, mildew and rot — keeping yield safe through humid spells.</p>
+          <a href="#contact" class="prod-link">View formulations <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2"/></svg></a>
+        </div>
+      </div>
+
+      <div class="prod-card" data-reveal>
+        <div class="prod-img">
+          <span class="prod-tagchip">Herbicide</span>
+          <img src="https://images.unsplash.com/photo-1592982537447-7440770cbfc9?q=80&w=900&auto=format&fit=crop&sat=-20" alt="Tractor spraying herbicide on farmland">
+        </div>
+        <div class="prod-body">
+          <h3>Herbicides</h3>
+          <p>Selective and non-selective weed management that protects crop growth without disturbing soil health.</p>
+          <a href="#contact" class="prod-link">View formulations <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2"/></svg></a>
+        </div>
+      </div>
+
+      <div class="prod-card" data-reveal>
+        <div class="prod-img">
+          <span class="prod-tagchip">Plant Nutrition</span>
+          <img src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?q=80&w=900&auto=format&fit=crop" alt="Close-up of healthy green sapling growing in soil">
+        </div>
+        <div class="prod-body">
+          <h3>Plant Growth &amp; Nutrition</h3>
+          <p>Micronutrient and bio-stimulant blends that strengthen root systems and improve flowering &amp; fruit set.</p>
+          <a href="#contact" class="prod-link">View formulations <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2"/></svg></a>
+        </div>
+      </div>
+
+      <div class="prod-card" data-reveal>
+        <div class="prod-img">
+          <span class="prod-tagchip">Seed Treatment</span>
+          <img src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?q=80&w=900&auto=format&fit=crop" alt="Hands holding seeds before sowing">
+        </div>
+        <div class="prod-body">
+          <h3>Seed Treatment</h3>
+          <p>Protective seed coatings that guard against soil-borne disease right from germination.</p>
+          <a href="#contact" class="prod-link">View formulations <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2"/></svg></a>
+        </div>
+      </div>
+
+      <div class="prod-card" data-reveal>
+        <div class="prod-img">
+          <span class="prod-tagchip">Bio-Pesticide</span>
+          <img src="https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?q=80&w=900&auto=format&fit=crop" alt="Sunlit rows of crops in an open field">
+        </div>
+        <div class="prod-body">
+          <h3>Bio-Pesticides</h3>
+          <p>Organic-compliant pest control options for farmers shifting toward residue-free, sustainable cultivation.</p>
+          <a href="#contact" class="prod-link">View formulations <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2"/></svg></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap about-grid">
+    <div class="about-imgwrap" data-reveal>
+      <div class="about-img">
+        <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=900&auto=format&fit=crop" alt="Farmer inspecting healthy crop field">
+      </div>
+      <div class="about-badge">
+        <b>25+</b>
+        <span>Years Trusted</span>
+      </div>
+    </div>
+    <div class="about-text" data-reveal>
+      <span class="eyebrow">About The Firm</span>
+      <h2>Rooted in the field, not just the lab.</h2>
+      <p>Pranav Rasayan Pvt. Ltd. began with a simple belief — that a farmer's trust is earned one good harvest at a time. What started as a small formulation unit has grown into a firm that dealers and farmers across the region rely on for honest, effective crop protection.</p>
+      <p>Every product that leaves our facility is tested against real field conditions first, not just lab benchmarks — because a pesticide that doesn't survive monsoon humidity or a sudden pest surge isn't solving anything for the farmer holding it.</p>
+      <div class="about-sign">
+        Pranav Rasayan
+        <small>PVT. LTD.</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="why">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow">Why Farmers Choose Us</span>
+      <h2>Built for the field, not just the shelf</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card" data-reveal>
+        <svg class="ico" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z" stroke="#E8B33D" stroke-width="1.5"/></svg>
+        <h3>Lab Certified Quality</h3>
+        <p>Every batch is tested for purity and concentration before it leaves our facility.</p>
+      </div>
+      <div class="why-card" data-reveal>
+        <svg class="ico" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#E8B33D" stroke-width="1.5"/><path d="M12 7v5l4 2" stroke="#E8B33D" stroke-width="1.5"/></svg>
+        <h3>Fast Local Delivery</h3>
+        <p>A dealer network built close to the farm, so stock reaches you within the sowing window.</p>
+      </div>
+      <div class="why-card" data-reveal>
+        <svg class="ico" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.5-7-10.5A5 5 0 0112 5a5 5 0 017 5.5C19 16.5 12 21 12 21Z" stroke="#E8B33D" stroke-width="1.5"/></svg>
+        <h3>Farmer-First Pricing</h3>
+        <p>Effective formulations priced to fit a real cropping season's budget, not inflated MRPs.</p>
+      </div>
+      <div class="why-card" data-reveal>
+        <svg class="ico" viewBox="0 0 24 24" fill="none"><path d="M4 21V9l8-6 8 6v12M9 21v-7h6v7" stroke="#E8B33D" stroke-width="1.5"/></svg>
+        <h3>On-Ground Support</h3>
+        <p>Our field team visits, advises on dosage, and follows up through the crop cycle.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="process" id="process">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow">How We Work</span>
+      <h2>From our facility to your field</h2>
+    </div>
+    <div class="process-grid">
+      <div class="process-card" data-reveal>
+        <div class="process-num">01</div>
+        <h3>Formulate &amp; Test</h3>
+        <p>Each product is developed and lab-tested for stability and effectiveness.</p>
+        <div class="process-line"></div>
+      </div>
+      <div class="process-card" data-reveal>
+        <div class="process-num">02</div>
+        <h3>Field Trial</h3>
+        <p>Trialed on real cropping plots before mass production begins.</p>
+        <div class="process-line"></div>
+      </div>
+      <div class="process-card" data-reveal>
+        <div class="process-num">03</div>
+        <h3>Dealer Network</h3>
+        <p>Distributed through a vetted local dealer network for reliable access.</p>
+        <div class="process-line"></div>
+      </div>
+      <div class="process-card" data-reveal>
+        <div class="process-num">04</div>
+        <h3>Farmer Support</h3>
+        <p>Dosage guidance and after-use support throughout the season.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="gallery" id="gallery">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow">From The Field</span>
+      <h2>A season, in pictures</h2>
+    </div>
+    <div class="gal-grid">
+      <div class="gal-item tall" data-reveal><img src="https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?q=80&w=700&auto=format&fit=crop" alt="Sunlit crop field rows"></div>
+      <div class="gal-item" data-reveal><img src="https://images.unsplash.com/photo-1592982537447-7440770cbfc9?q=80&w=700&auto=format&fit=crop" alt="Farmer spraying crop field"></div>
+      <div class="gal-item wide" data-reveal><img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=900&auto=format&fit=crop" alt="Wide green farmland view"></div>
+      <div class="gal-item" data-reveal><img src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?q=80&w=700&auto=format&fit=crop" alt="Close-up of young plant sapling"></div>
+      <div class="gal-item" data-reveal><img src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?q=80&w=700&auto=format&fit=crop" alt="Hands holding seeds"></div>
+      <div class="gal-item wide" data-reveal><img src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?q=80&w=900&auto=format&fit=crop&flip=h" alt="Field of crops in golden light"></div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="contact-card" data-reveal>
+      <h2>Get in touch with us</h2>
+      <p class="sub">For dealership enquiries, bulk orders, or crop-specific advice — reach out and our team will respond within a day.</p>
+      <form id="enquiryForm" onsubmit="sendEnquiry(event)">
+        <div class="form-row">
+          <div class="field">
+            <label>Full Name</label>
+            <input type="text" id="f_name" placeholder="Your name" required>
+          </div>
+          <div class="field">
+            <label>Phone Number</label>
+            <input type="tel" id="f_phone" placeholder="+91 XXXXX XXXXX" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Village / District</label>
+            <input type="text" id="f_location" placeholder="Your location">
+          </div>
+          <div class="field">
+            <label>I am a</label>
+            <select id="f_type">
+              <option>Farmer</option>
+              <option>Dealer / Distributor</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:18px;">
+          <label>Message</label>
+          <textarea id="f_message" placeholder="Tell us about your crop or requirement..."></textarea>
+        </div>
+        <button class="btn solid form-submit" type="submit">Send Enquiry on WhatsApp</button>
+        <p class="form-note" id="formMsg" style="display:none;color:var(--leaf-deep);font-weight:600;">Opening WhatsApp with your enquiry — please hit send there to deliver it.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-logo">Pranav Rasayan Pvt. Ltd.</div>
+        <p>Trusted crop protection and agrochemical solutions, formulated for the farmer's field — not just the lab bench.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Explore</h4>
+        <a href="#products">Products</a>
+        <a href="#about">About</a>
+        <a href="#process">How We Work</a>
+        <a href="#gallery">Gallery</a>
+      </div>
+      <div class="foot-col">
+        <h4>Products</h4>
+        <span>Insecticides</span>
+        <span>Fungicides</span>
+        <span>Herbicides</span>
+        <span>Plant Nutrition</span>
+      </div>
+      <div class="foot-col">
+        <h4>Contact</h4>
+        <span>E-FF01, First Floor, Capital Arcadia, Main Alwar Bypass Road, Village Khanpur Bhiwadi, Khairthal-Tijara, Rajasthan</span>
+        <a href="tel:+917017197172">+91 70171 97172</a>
+        <a href="mailto:Info@pranavrasayan.in">Info@pranavrasayan.in</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Pranav Rasayan Pvt. Ltd. All rights reserved.</span>
+      <span>Crop protection &amp; agrochemical solutions</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // contact form -> opens WhatsApp with prefilled enquiry message
+  function sendEnquiry(e){
+    e.preventDefault();
+    const name = document.getElementById('f_name').value.trim();
+    const phone = document.getElementById('f_phone').value.trim();
+    const location = document.getElementById('f_location').value.trim();
+    const type = document.getElementById('f_type').value;
+    const message = document.getElementById('f_message').value.trim();
+
+    let text = `New enquiry from Pranav Rasayan website%0A%0A`;
+    text += `Name: ${name}%0A`;
+    text += `Phone: ${phone}%0A`;
+    if(location) text += `Location: ${location}%0A`;
+    text += `Type: ${type}%0A`;
+    if(message) text += `Message: ${message}`;
+
+    const whatsappUrl = `https://wa.me/917017197172?text=${text}`;
+    document.getElementById('formMsg').style.display='block';
+    window.open(whatsappUrl, '_blank');
+    e.target.reset();
+  }
+
+  const dot = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+  let mx=0,my=0, rx=0, ry=0;
+  window.addEventListener('mousemove', e=>{
+    mx=e.clientX; my=e.clientY;
+    dot.style.left=mx+'px'; dot.style.top=my+'px';
+  });
+  function ringLoop(){
+    rx += (mx-rx)*0.18; ry += (my-ry)*0.18;
+    ring.style.left=rx+'px'; ring.style.top=ry+'px';
+    requestAnimationFrame(ringLoop);
+  }
+  ringLoop();
+  document.querySelectorAll('a,button,input,select,textarea,.prod-card').forEach(el=>{
+    el.addEventListener('mouseenter',()=>document.body.classList.add('hovering'));
+    el.addEventListener('mouseleave',()=>document.body.classList.remove('hovering'));
+  });
+
+  // header scroll state
+  const header = document.getElementById('siteHeader');
+  window.addEventListener('scroll', ()=>{
+    header.classList.toggle('scrolled', window.scrollY > 30);
+  });
+
+  // hero text reveal on load
+  window.addEventListener('load', ()=>{
+    document.querySelector('.hero').classList.add('loaded');
+  });
+
+  // scroll reveal via IntersectionObserver
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(en=>{
+      if(en.isIntersecting){
+        en.target.classList.add('in');
+        obs.unobserve(en.target);
+      }
+    });
+  },{threshold:0.15});
+  document.querySelectorAll('[data-reveal]').forEach((el,i)=>{
+    el.style.transitionDelay = (i%6)*70 + 'ms';
+    obs.observe(el);
+  });
+</script>
+
+</body>
+</html>
